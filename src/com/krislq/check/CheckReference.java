@@ -14,7 +14,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 public class CheckReference {
-    public static final String PROJECT_PATH = "D:\\Projects\\ppzuche\\ICarsclub";
+    public static final String PROJECT_PATH = "D:\\Projects\\HelloWorld";
     public static void main(String[] args) {
         CheckReference cr = new CheckReference();
         cr.start();

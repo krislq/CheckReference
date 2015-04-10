@@ -1,3 +1,4 @@
+
 package com.krislq.check;
 
 import java.io.BufferedReader;
@@ -13,15 +14,44 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+/**
+ * 
+ * @{#} CheckReference.java Create on 2015年4月10日 上午10:42:43    
+ *  
+ *
+ * <p>Copyright: Copyright(c) 2013 </p> 
+ * <p>Company: icarsclub</p>
+ * @Version 1.0
+ * @Author <a href="mailto:kris@ppzuche.com">Kris</a>   
+ *  
+ *
+ */
 public class CheckReference {
     public static final String PROJECT_PATH = "D:\\Projects\\HelloWorld";
+    private static String mOp = null;//del , copy
+
+    //public static final String PROJECT_PATH = System.getProperty("user.dir");// 当前路径
+
+    
+    private List<String> mLayoutsChecked = new ArrayList<String>();
+
+    private List<String> mStrsChecked = new ArrayList<String>();
+
+    private List<Drawable> mDrawablesChecked = new ArrayList<Drawable>();
+
+    private String mPojectPath = null;
+
     public static void main(String[] args) {
-        CheckReference cr = new CheckReference();
+        if(args!=null && args.length>0) {
+            mOp = args[0];
+        }
+         CheckReference cr = new CheckReference();
         cr.start();
     }
     
     public CheckReference() {
         
+        mPojectPath = System.getProperty("user.dir");
     }
     
     public void start() {
@@ -40,6 +70,9 @@ public class CheckReference {
                         boolean ret = findLayoutRefrence(s);
                         if(!ret) {
                             System.out.println("[Layout - NOREFER] "+s);
+
+                            // add checked layouts
+                            mLayoutsChecked.add(s + ".xml");
                         }
                     }
                 }
@@ -51,6 +84,9 @@ public class CheckReference {
                         boolean ret = findStringRefrence(s);
                         if(!ret) {
                             System.out.println("[String - NOREFER] "+s);
+
+                            // add checked strings
+                            mStrsChecked.add(s);
                         }
                     }
                 }
@@ -62,15 +98,65 @@ public class CheckReference {
                         boolean ret = findDrawableRefrence(s);
                         if(!ret) {
                             System.out.println("[Drawable - NOREFER] "+s);
+
+                            // add checked drawable
+                            mDrawablesChecked.add(s);
                         }
                     }
                 }
                 System.out.println("----scan over----");
+                if("del".equals(mOp)) {
+                    // 开始处理扫描的结果
+                    System.out.println("----begin Del----");
+                    onHandleChecked();
+                    System.out.println("----handler Del----");
+                } else if("copy".equals(mOp)) {
+                    //Copy the resource
+                }
             }
             
         }.start();
     }
     
+
+    /****
+     * @function: 处理检查出来的资源或者引用
+     */
+    private void onHandleChecked() {
+
+        HandleChecked handle = new HandleChecked();
+
+        System.out.println("--------handle layouts start---------");
+        // 处理无效的layout
+        handle.onDelLayout(PROJECT_PATH + "\\res\\layout", mLayoutsChecked);
+        System.out.println("--------handle layouts end---------");
+
+        System.out.println("--------handle strings start---------");
+        // 处理无效的strings
+        handle.onDelStrings(PROJECT_PATH + "\\res\\values\\strings.xml", mStrsChecked);
+        // handle.onDelStrings(PROJECT_PATH + "\\res\\values\\strings.xml",
+        // PROJECT_PATH + "\\res\\values\\strings_1.xml", mStrsChecked);
+        System.out.println("--------handle strings end---------");
+
+        System.out.println("--------handle drawables start---------");
+        // 处理无效的drawable
+        handle.onDelDrawable(PROJECT_PATH + "\\res", mDrawablesChecked);
+        // handle.onCopyDrawable(PROJECT_PATH + "\\res",
+        // "D:\\mysamples\\ununsed_drawable", mDrawablesChecked);
+        System.out.println("--------handle drawables end---------");
+
+        // release
+        if (mLayoutsChecked != null) {
+            mLayoutsChecked.clear();
+        }
+        if (mStrsChecked != null) {
+            mStrsChecked.clear();
+        }
+        if (mStrsChecked != null) {
+            mStrsChecked.clear();
+        }
+
+    }
 
     private List<String> readLayoutReference() {
         List<String> layoutRefrences = new ArrayList<String>();

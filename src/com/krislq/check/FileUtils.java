@@ -16,7 +16,7 @@ public class FileUtils {
     /***
      * @author jack shy
      * @function:处理扫出的无效资源或者引用接口工具类
-     * @date:2014-04-09
+     * @date:2015-04-09
      */
     private static final boolean DEBUG = true;
 
@@ -144,6 +144,14 @@ public class FileUtils {
         File file = new File(srcDirPath);
         File[] fs = file.listFiles();
 
+        File file2 = new File(destDirPath);
+        if (!file2.exists()) {
+            if (DEBUG) {
+                System.out.println(TAG + " mkdir: " + destDirPath);
+            }
+            file2.mkdirs();
+        }
+
         for (int i = 0; i < fs.length; i++) {
 
             String name = fs[i].getName();
@@ -165,6 +173,15 @@ public class FileUtils {
         if (DEBUG) {
             System.out.println(TAG + " copyFileByFullName " + fileFullName);
         }
+
+        File file2 = new File(destDirPath);
+        if (!file2.exists()) {
+            if (DEBUG) {
+                System.out.println(TAG + " mkdir: " + destDirPath);
+            }
+            file2.mkdirs();
+        }
+
         InputStream inStream = null;
         FileOutputStream fs = null;
         try {

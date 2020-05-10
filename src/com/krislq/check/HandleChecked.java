@@ -11,7 +11,7 @@ public class HandleChecked {
     /***
      * @author jack shy
      * @function:处理扫出的无效资源或者引用接口类
-     * @date:2014-04-09
+     * @date:2015-04-09
      */
 
     private static final boolean DEBUG = true;
@@ -120,7 +120,27 @@ public class HandleChecked {
             return;
         for (Drawable d : list) {
             // copy drawable中出现的无效文件
-            FileUtils.copyFileByFullName(srcDirPath + "\\" + d.getParentDirName(), destDirPath, d.getFileName());
+            FileUtils.copyFileByFullName(srcDirPath + "\\" + d.getParentDirName(), destDirPath + "\\" + d.getParentDirName(), d.getFileName());
+        }
+    }
+
+    /***
+     * 移动无效的资源文件到指定目录
+     * 
+     * @param srcDirPath
+     * @param destDirPath
+     * @param list
+     */
+    public void onRemoveDrawable(String srcDirPath, String destDirPath, List<Drawable> list) {
+        if (DEBUG) {
+            System.out.println(TAG + " onRemoveDrawable:");
+        }
+        if (list == null || list.size() == 0)
+            return;
+
+        for (Drawable d : list) {
+            // remove drawable中出现的无效文件 可能不同目录下有相同的文件名
+            FileUtils.removeFileByFullName(srcDirPath + "\\" + d.getParentDirName(), destDirPath + "\\" + d.getParentDirName(), d.getFileName());
         }
     }
 
